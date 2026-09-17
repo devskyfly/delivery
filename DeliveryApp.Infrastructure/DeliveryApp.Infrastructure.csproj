@@ -51,4 +51,8 @@
       <Protobuf Include="Proto\order_events.proto" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Adapters\Output\" />
+    </ItemGroup>
+
 </Project>
