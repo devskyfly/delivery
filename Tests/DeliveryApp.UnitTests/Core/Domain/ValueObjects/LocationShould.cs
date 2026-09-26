@@ -19,7 +19,7 @@ public class LocationShould
     {
         var location1 = Location.Create(2, 6);
         var location2 = Location.Create(4, 9);
-        var distance = Location.CountDistance(location1, location2);
+        var distance = location1.DistanceTo(location2);
         distance.Should().Be(5);
     }
     

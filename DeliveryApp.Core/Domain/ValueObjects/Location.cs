@@ -41,9 +41,9 @@ public class Location: ValueObject
         return new Location(x, y);
     }
     
-    public static int CountDistance(Location p1, Location p2)
+    public int DistanceTo(Location p)
     {
-        return Math.Abs(p1.X - p2.X) + Math.Abs(p1.Y - p2.Y);
+        return Math.Abs(X - p.X) + Math.Abs(Y - p.Y);
     }
 
     protected override IEnumerable<object> GetEqualityComponents()
