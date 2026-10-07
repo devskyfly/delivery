@@ -4,7 +4,9 @@ namespace DeliveryApp.Core.Domain.ValueObjects;
 public class Location: ValueObject
 {
     public const int MAX_X_VALUE = 10;
+    public const int MIN_X_VALUE = 1;
     public const int MAX_Y_VALUE = 10;
+    public const int MIN_Y_VALUE = 1;
     
     public int X { get; }
     public int Y { get; }
@@ -39,6 +41,13 @@ public class Location: ValueObject
         }
 
         return new Location(x, y);
+    }
+
+    public static Location CreateRandom()
+    {
+        int x = Random.Shared.Next(MIN_X_VALUE, MAX_X_VALUE);
+        int y = Random.Shared.Next(MIN_X_VALUE, MAX_X_VALUE);
+        return Create(x, y);
     }
     
     public int DistanceTo(Location p)
