@@ -45,8 +45,8 @@ public class Location: ValueObject
 
     public static Location CreateRandom()
     {
-        int x = Random.Shared.Next(MIN_X_VALUE, MAX_X_VALUE);
-        int y = Random.Shared.Next(MIN_X_VALUE, MAX_X_VALUE);
+        int x = Random.Shared.Next(MIN_X_VALUE, MAX_X_VALUE + 1);
+        int y = Random.Shared.Next(MIN_X_VALUE, MAX_X_VALUE + 1);
         return Create(x, y);
     }
     

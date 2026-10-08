@@ -12,7 +12,7 @@ public class Volume: ValueObject
         
     }
 
-    public Volume(int value) : this()
+    private Volume(int value) : this()
     {
         Value = value;
     }

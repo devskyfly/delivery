@@ -4,8 +4,8 @@ namespace DeliveryApp.Core.Domain.ValueObjects;
 
 public class Status : ValueObject
 {
-    public static Status Assigned = new(nameof(Assigned).ToLowerInvariant());
-    public static Status Completed = new(nameof(Completed).ToLowerInvariant());
+    public static readonly Status Assigned = new(nameof(Assigned).ToLowerInvariant());
+    public static readonly Status Completed = new(nameof(Completed).ToLowerInvariant());
 
     public string Name {get; private set;}
     

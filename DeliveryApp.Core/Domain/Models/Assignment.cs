@@ -36,6 +36,7 @@ public class Assignment: Entity<Guid>
     
     private Assignment(Guid orderId, Volume volume, Location location, Status status): this()
     {
+        Id = Guid.NewGuid();
         OrderId = orderId;
         Volume = volume;
         Location = location;
@@ -45,10 +46,6 @@ public class Assignment: Entity<Guid>
     public static Result<Assignment,Error> Create(Guid orderId, Volume volume, Location location)
     {
         var status = Status.Assigned;
-        if (status != Status.Assigned)
-        {
-            GeneralErrors.ValueIsInvalid(nameof(status), status);
-        }
         return new Assignment(orderId, volume, location, status);
     }
 
