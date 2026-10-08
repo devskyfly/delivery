@@ -3,6 +3,7 @@ namespace DeliveryApp.Core.Domain.ValueObjects;
 
 public class Location: ValueObject
 {
+    public const int MIN_LOCATION_DISTANCE_FOR_COMPLETE = 100;
     public const int MAX_X_VALUE = 10;
     public const int MIN_X_VALUE = 1;
     public const int MAX_Y_VALUE = 10;
@@ -46,7 +47,7 @@ public class Location: ValueObject
     public static Location CreateRandom()
     {
         int x = Random.Shared.Next(MIN_X_VALUE, MAX_X_VALUE + 1);
-        int y = Random.Shared.Next(MIN_X_VALUE, MAX_X_VALUE + 1);
+        int y = Random.Shared.Next(MIN_Y_VALUE, MAX_Y_VALUE + 1);
         return Create(x, y);
     }
     

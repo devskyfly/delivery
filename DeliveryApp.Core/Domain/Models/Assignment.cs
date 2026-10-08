@@ -54,10 +54,29 @@ public class Assignment: Entity<Guid>
         int distance = this.Location.DistanceTo(courierLocation);
         if (distance > 1)
         {
-            return GeneralErrors.ValueIsInvalid(nameof(distance), distance);
+            return Errors.CantCompleteAssignment();
         }
         this.Status = Status.Completed;
         return this;
     }
     
+    public static int SumVolume(IEnumerable<Assignment> assignments)
+    {
+        return assignments.Sum(v => v.Volume.Value);
+    }
+    
+    public static class Errors
+    {
+        // public static Error CantAssignOrder()
+        // {
+        //     return new Error(nameof(Assignments),
+        //         $"Невозможно назначить заказ, сумма объемов {nameof(Assignments)} будет больше ${ValueObjects.MaxVolume.MAX_VOLUME}");
+        // }
+        
+        public static Error CantCompleteAssignment()
+        {
+            return new Error(nameof(Location),
+                $"Невозможно завершить назначение, потому что дистанция между курьером и заказом больше {Location.MIN_LOCATION_DISTANCE_FOR_COMPLETE}");
+        }
+    }
 }

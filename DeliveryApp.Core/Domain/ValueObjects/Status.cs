@@ -18,11 +18,6 @@ public class Status : ValueObject
     {
         Name = name;
     }
-
-    public Status Create(string name)
-    {
-        return new Status(name);
-    }
     
     protected override IEnumerable<object> GetEqualityComponents()
     {
