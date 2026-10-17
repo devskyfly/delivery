@@ -25,7 +25,6 @@ public class Volume: ValueObject
         }
         return new Volume(value);
     }
-    
     protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return Value;

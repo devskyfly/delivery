@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using CSharpFunctionalExtensions;
 using Errs;
 
@@ -30,6 +31,22 @@ public class MaxVolume: ValueObject
             return GeneralErrors.ValueMustBeGreaterThan(nameof(value), value, MAX_VOLUME);
         }
         return new MaxVolume(value);
+    }
+
+    public bool CanContain(IEnumerable<Volume> volumes)
+    {
+        var remaining = Value;
+        foreach (var volume in volumes)
+        {
+            if (volume.Value > remaining)
+            {
+                return false;
+            }
+
+            remaining -= volume.Value;
+        }
+
+        return true;
     }
     
     protected override IEnumerable<object> GetEqualityComponents()

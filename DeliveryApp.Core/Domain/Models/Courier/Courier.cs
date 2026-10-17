@@ -1,5 +1,3 @@
-using System.Numerics;
-using System.Runtime.InteropServices;
 using CSharpFunctionalExtensions;
 using Ddd;
 using DeliveryApp.Core.Domain.ValueObjects;
@@ -13,9 +11,11 @@ public class Courier: Aggregate<Guid>
     
     public string Name {
         get;
+        private set;
     }
     public Location Location {
         get;
+        private set;
     }
     
     public MaxVolume MaxVolume { get; private set;}
@@ -27,50 +27,64 @@ public class Courier: Aggregate<Guid>
         
     }
     
-    private Courier(string name, Location location): this()
+    private Courier(string name, Location location, MaxVolume maxVolume): this()
     {
+        Id =  Guid.NewGuid();
         Name = name;
         Location = location;
+        Assignments = new List<Assignment>();
+        MaxVolume = maxVolume;
     }
     
-    public static Courier Create(string name, Location location)
+    public static Result<Courier, Error> Create(string name, Location location)
     {
-        return new Courier(name, location);
+        var maxVolume = MaxVolume.Create(MaxVolume.MAX_VOLUME);
+        if (maxVolume.IsFailure) return maxVolume.Error;
+        return new Courier(name, location, maxVolume.Value);
     }
 
     public Result<Courier, Error> AssignOrder(Order order)
     {
         if (!CanAssignOrder(order))
         {
-            
+            return Errors.CantAssignOrder();
         }
 
         var assignmentResult = Assignment.Create(order.Id, order.Volume, order.Location);
+
         if (assignmentResult.IsFailure)
         {
             return assignmentResult.Error;
         }
+
         Assignments.Add(assignmentResult.Value);
         return this;
     }
 
     public Result<Courier, Error> Move(Location location)
     {
-        if (this.Location.DistanceTo(location) >= MAX_MOVEMENT_DISTANCE_STEP)
+        if (this.Location.DistanceTo(location) > MAX_MOVEMENT_DISTANCE_STEP)
         {
             return Errors.CantMove();
         }
+
+        Location = location;
 
         return this;
     }
 
     public Result<Courier, Error> CompleteAssignment(Order order)
     {
-        if (!CanAssignOrder(order))
+        if (!CanCompleteOrder(order))
         {
-            return Errors.CantAssignOrder();
+            return Errors.CantCompleteOrder();
         }
-        var assignment = Assignments.Find(x=>x.OrderId==order.Id);
+        var assignment = Assignments.Find(x => x.OrderId == order.Id);
+        if (assignment is null)
+        {
+            return Errors.CantCompleteOrder();
+        }
+
         var assignmentResult = assignment.Complete(this.Location);
         if (assignmentResult.IsFailure) return assignmentResult.Error;
         return this;
@@ -78,29 +92,21 @@ public class Courier: Aggregate<Guid>
     
     public bool CanCompleteOrder(Order order)
     {
-        var distanse = Location.DistanceTo(order.Location);
-        if (distanse <= Location.MIN_LOCATION_DISTANCE_FOR_COMPLETE)
-        {
-            return true; 
-        }
-        return false;
+        return Location.DistanceTo(order.Location) <= Location.MIN_LOCATION_DISTANCE_FOR_COMPLETE;
     }
     
     public bool CanAssignOrder(Order order)
     {
-        var volumeSum=Assignment.SumVolume(Assignments);
-        if (volumeSum + order.Volume.Value > MaxVolume.Value)
-        {
-            return false;
-        }
-        return true;
+        return MaxVolume.CanContain(Assignments
+            .Select(assignment => assignment.Volume)
+            .Append(order.Volume));
     }
     public static class Errors
     {
         public static Error CantAssignOrder()
         {
             return new Error(nameof(Assignments),
-                $"Невозможно назначить заказ, сумма объемов {nameof(Assignments)} будет больше ${ValueObjects.MaxVolume.MAX_VOLUME}.");
+                $"Невозможно назначить заказ, сумма объемов {nameof(Assignments)} должна быть больше 0 и меньше или равно ${ValueObjects.MaxVolume.MAX_VOLUME}.");
         }
         
         public static Error CantCompleteOrder()
@@ -116,4 +122,3 @@ public class Courier: Aggregate<Guid>
         }
     }
 }
-

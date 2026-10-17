@@ -1,3 +1,4 @@
+using CSharpFunctionalExtensions;
 using Ddd;
 using DeliveryApp.Core.Domain.ValueObjects;
 using Errs;
@@ -25,31 +26,31 @@ public class Order: Aggregate<Guid>
         Status = status;
     }
 
-    //private Order(): this()
-    //{
-    //}
-
-    public Order Create(Guid id, Volume volume, Location location)
+    public static Order Create(Guid id, Volume volume, Location location)
     {
         var status = OrderStatus.Created;
         return new Order(id, volume, location, status);
     }
 
-    public Order Assign()
+    public Result<Order, Error> Assign()
     {
+        if (Status != OrderStatus.Created)
+        {
+            return Errors.CantAssignOrder();
+        }
+
         var status = OrderStatus.Assigned;
         Status = status;
         return this;
     }
 
-    public Order Complete()
+    public Result<Order,Error> Complete()
     {
-        
         if (Status != OrderStatus.Assigned)
         {
-            
+            return Errors.CantCompleteOrder();
         }
-
+        Status = OrderStatus.Completed;
         return this;
     }
     public static class Errors
@@ -61,7 +62,7 @@ public class Order: Aggregate<Guid>
     
         public static Error CantCompleteOrder()
         {
-            return new Error(nameof(Status).ToUpperInvariant(), $"Статус заказа не может быть переведен в статус '{OrderStatus.Comleted}'.");
+            return new Error(nameof(Status).ToUpperInvariant(), $"Статус заказа не может быть переведен в статус '{OrderStatus.Completed}'.");
         }
     } 
 }

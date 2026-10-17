@@ -3,7 +3,7 @@ namespace DeliveryApp.Core.Domain.ValueObjects;
 
 public class Location: ValueObject
 {
-    public const int MIN_LOCATION_DISTANCE_FOR_COMPLETE = 100;
+    public const int MIN_LOCATION_DISTANCE_FOR_COMPLETE = 1;
     public const int MAX_X_VALUE = 10;
     public const int MIN_X_VALUE = 1;
     public const int MAX_Y_VALUE = 10;

@@ -26,6 +26,8 @@ public class LocationShould
     [Theory]
     [InlineData(0,1)]
     [InlineData(1,0)]
+    [InlineData(11,1)]
+    [InlineData(1,11)]
     public void ThrowExceptionOnCreate(int x, int y)
     {
         Assert.Throws<ArgumentException>(() =>
@@ -33,5 +35,25 @@ public class LocationShould
             var location = Location.Create(x, y);
         });
     }
-    
+
+    [Fact]
+    public void BeEqualWhenCoordinatesAreEqual()
+    {
+        Location.Create(4, 7).Should().Be(Location.Create(4, 7));
+    }
+
+    [Fact]
+    public void BeDifferentWhenCoordinatesDiffer()
+    {
+        Location.Create(4, 7).Should().NotBe(Location.Create(4, 8));
+    }
+
+    [Fact]
+    public void CreateRandomLocationWithinBounds()
+    {
+        var location = Location.CreateRandom();
+
+        location.X.Should().BeInRange(Location.MIN_X_VALUE, Location.MAX_X_VALUE);
+        location.Y.Should().BeInRange(Location.MIN_Y_VALUE, Location.MAX_Y_VALUE);
+    }
 }

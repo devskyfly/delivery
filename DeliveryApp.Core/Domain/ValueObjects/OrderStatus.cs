@@ -6,7 +6,7 @@ public class OrderStatus: ValueObject
 {
     public static readonly OrderStatus Created = new (nameof(Created).ToUpperInvariant());
     public static readonly OrderStatus Assigned = new (nameof(Assigned).ToUpperInvariant());
-    public static readonly OrderStatus Comleted = new (nameof(Comleted).ToUpperInvariant());
+    public static readonly OrderStatus Completed = new (nameof(Completed).ToUpperInvariant());
     public string Name {get; private set;}
         
     private OrderStatus()
